@@ -1,8 +1,15 @@
-exports.datadir = __dirname + "/testdata/sites.txt"; // tests will need to override this.
 var fs = require('fs');
 var http_get = require("http-get");
 var http = require("http");
 var url = require("url");
+var path = require('path');
+
+exports.datadir = path.normalize(__dirname + '/../data/sites.txt'); // tests will need to override this.
+
+exports.turnURLDataToArray = function () {
+  return fs.readFileSync(exports.datadir, "utf8").split(" ");
+};
+console.log(exports.turnURLDataToArray());
 
 
 exports.handleRequest = function (req, res) {
@@ -31,8 +38,8 @@ exports.handleRequest = function (req, res) {
           res.writeHead(200, {'Content-Type':"text/html"});
           res.end(data);
         });
-      }
-      else {
+      } else {
+
         console.log("Invalid Path? " + req.url);
         res.writeHead(404);
         res.end();
