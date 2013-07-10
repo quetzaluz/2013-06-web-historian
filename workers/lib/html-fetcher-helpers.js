@@ -1,3 +1,5 @@
+fs = require('fs');
+
 exports.readUrls = function(filePath, cb){
   if (filePath.length) {
     for (var i = 0; i < filePath.length; i++) {
