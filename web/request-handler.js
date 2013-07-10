@@ -4,7 +4,9 @@ var http_get = require("http-get");
 var http = require("http");
 var url = require("url");
 
+
 exports.handleRequest = function (req, res) {
+  console.log("Serving request type " + req.method + " for url " + req.url);
   console.log(exports.datadir);
   var path = url.parse(req.url).path.split('/');
   console.log(req.url);
@@ -20,9 +22,22 @@ exports.handleRequest = function (req, res) {
       });
       break;
     case('GET'):
-      console.log(req.url);
-      res.writeHead(200);
-      res.end(JSON.stringify(req.data));
+      if (path[0] === "" || path[0] === "index.html") {
+        var fileStream = fs.readFile('./web/public/index.html', function (err, data) {
+          if (err) {
+            res.writeHead(500);
+            return res.end('Error loading index.html');
+          }
+          res.writeHead(200, {'Content-Type':"text/html"});
+          res.end(data);
+        });
+      }
+      else {
+        console.log("Invalid Path? " + req.url);
+        res.writeHead(404);
+        res.end();
+      }
       break;
+
   }
 };
